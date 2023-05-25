@@ -105,7 +105,7 @@ INSERT INTO comment (id, creator_id, content )
 VALUES
 	('c001', 'u001','perfeito' ),
 	('c002','u002' ,'visto :)' ),
-	('c003','u003' ,'muiito bom'  );
+	('c003','u003' ,'muiito bom' );
 
 
 DROP TABLE comment;  

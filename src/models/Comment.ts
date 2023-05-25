@@ -42,7 +42,7 @@ export interface CommentDB {
     export interface LikeDislikeDB{
         user_id: string,
         comment_id: string, 
-        like: number
+        likes: number
     }   
   
     

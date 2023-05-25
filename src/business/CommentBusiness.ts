@@ -200,7 +200,7 @@ export class CommentBusiness {
       const likeOrDislike: LikeDislikeDB = {
         user_id: payload.id,
         comment_id: commentId,
-        like: likeSQLlite
+        likes: likeSQLlite
       }
   
       const likeDislikesExits =

@@ -125,15 +125,6 @@ export interface PostDBWhitCreatorName {
             this.creator_id = value
         }
     
-        
-       /* public getCreator_name(): string {
-            return this.creator_name
-        }
-    
-        public setCreator_name(value: string): void {
-            this.creator_name = value
-        }*/
-    
         public addLike = (): void => {
             this.likes++
         }
