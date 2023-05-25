@@ -1,4 +1,4 @@
--- Active: 1684869414787@@127.0.0.1@3306
+-- Active: 1685034915217@@127.0.0.1@3306
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
@@ -45,8 +45,6 @@ CREATE TABLE post (
     likes INTEGER DEFAULT (0) NOT NULL, 
   */
 
-SELECT * FROM post;
-
 INSERT INTO post (id, creator_id, content )
 VALUES
 	('p001', 'u001','kkkkkk' ),
@@ -54,7 +52,10 @@ VALUES
 	('p003','u003' ,'obrigado, Parabéns!'  );
     
 
-DROP TABLE post;     
+DROP TABLE post;  
+
+SELECT * FROM post;
+   
 
 CREATE TABLE likes_dislikes (
     user_id TEXT NOT NULL, 
@@ -71,7 +72,6 @@ CREATE TABLE likes_dislikes (
 /*   ON UPDATE CASCADE
     ON DELETE CASCADE
 */
-SELECT * FROM likes_dislikes;
 
 INSERT INTO likes_dislikes
 (user_id, post_id, likes)
@@ -80,6 +80,40 @@ VALUES
 ('u002', 'p001' , 2),
 ('u003', 'p002' , 3);
 
+
+
+DROP TABLE likes_dislikes;  
+
+SELECT * FROM likes_dislikes;
+
+
+CREATE TABLE comment (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    creator_id TEXT NOT NULL,
+    dislikes INTEGER DEFAULT (0) NOT NULL, 
+    likes INTEGER DEFAULT (0) NOT NULL, 
+    content TEXT NOT NULL,  
+    created_at TEXT DEFAULT (DATETIME()) NOT NULL,
+    update_at TEXT DEFAULT (DATETIME()) NOT NULL,
+    FOREIGN KEY (creator_id) REFERENCES users(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+    );
+
+
+INSERT INTO comment (id, creator_id, content )
+VALUES
+	('c001', 'u001','perfeito' ),
+	('c002','u002' ,'visto :)' ),
+	('c003','u003' ,'muiito bom'  );
+
+
+DROP TABLE comment;  
+
+SELECT * FROM comment;
+
+    
+  
 
 
 CREATE TABLE likes_dislikes_comment (
@@ -94,9 +128,6 @@ CREATE TABLE likes_dislikes_comment (
     ON DELETE CASCADE
  );
 
-DROP TABLE likes_dislikes_comment;
-
-SELECT * FROM likes_dislikes_comment;
 
 INSERT INTO likes_dislikes_comment
 (user_id, comment_id, likes)
@@ -106,7 +137,14 @@ VALUES
 ('u003', 'c002' , 6);
 
 
-CREATE TABLE post_comment (
+DROP TABLE likes_dislikes_comment;
+
+
+SELECT * FROM likes_dislikes_comment;
+
+
+
+/*CREATE TABLE post_comment (
     post_id TEXT NOT NULL, 
     comment_id TEXT NOT NULL,
     likes INTEGER NOT NULL,
@@ -128,7 +166,7 @@ INSERT INTO post_comment
 VALUES 
 ('p001', 'c003' , 4),
 ('p002', 'c001' , 3),
-('p003', 'c002' , 6);
+('p003', 'c002' , 6);*/
 
 
 ---------------------------------------------------------
@@ -166,5 +204,3 @@ SET likes = 5, dislikes = 4
 WHERE id = 'c003';
 
 
-
-DROP TABLE likes_dislikes

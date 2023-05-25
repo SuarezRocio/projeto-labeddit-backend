@@ -10,7 +10,7 @@ import { ForbiddenError } from "../errors/ForbiddenError"
 import { NotFoundError } from "../errors/NotFoundError"
 import { UnathorizedError } from "../errors/UnauthorizedError"
 import { COMMENT_LIKE } from "../models/Comment"
-import { LikeDislikeDB } from "../models/Comment"
+import { LikeDislikeDB , Comment} from "../models/Comment"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
 
@@ -46,8 +46,7 @@ export class CommentBusiness {
             CommentDBWhitCreatorName.likes,
             CommentDBWhitCreatorName.content,
             CommentDBWhitCreatorName.created_at,
-            CommentDBWhitCreatorName.update_at,
-            CommentDBWhitCreatorName.creator_name
+            CommentDBWhitCreatorName.update_at
           )
           return commentDB.toBusinessModel()
         })
@@ -61,12 +60,17 @@ export class CommentBusiness {
     public editComment = async (
       input: EditCommentInputDTO
     ): Promise<EditCommentOutputDTO> => {
-      const {idToEdit,  token } = input
+      const {idToEdit,  token , content } = input
   
   
       
       const payload = this.tokenManager.getPayload(token)
       
+      
+      if(!content){
+        throw new BadRequestError()
+      }
+
       if(!payload){
         throw new UnathorizedError()
       }
@@ -95,13 +99,12 @@ export class CommentBusiness {
         CommentDB.creator_id,
         CommentDB.dislikes,
         CommentDB.likes,
-        CommentDB.content,
+        content,
         CommentDB.created_at,
-        CommentDB.update_at,
-        payload.name
+        CommentDB.update_at
       )
   
-      const updateCommentDB = comment.CommentModel()
+      const updateCommentDB = comment.toDBModel()
       await this.commentDatabase.updateComment(updateCommentDB)
   
   
@@ -151,7 +154,7 @@ export class CommentBusiness {
     public likeOrDislikeComment = async (
       input: LikeOrDislikeInputDTO
     ): Promise<LikeOrDislikeOuputDTO> => {
-      const { token, commentId } = input
+      const { token, commentId, likes } = input
   
       const payload = this.tokenManager.getPayload(token)
   
@@ -188,11 +191,10 @@ export class CommentBusiness {
         commentDBWhitCreatorName.likes,
         commentDBWhitCreatorName.content,
         commentDBWhitCreatorName.created_at,
-        commentDBWhitCreatorName.update_at,
-        commentDBWhitCreatorName.creator_name
+        commentDBWhitCreatorName.update_at
       )
      
-      const likeSQLlite = LikeOrDislikeCommentSchema ? 1 : 0
+      const likeSQLlite = likes ? 1 : 0
   
   
       const likeOrDislike: LikeDislikeDB = {
@@ -205,7 +207,7 @@ export class CommentBusiness {
         await this.commentDatabase.findDislikeLike(likeOrDislike)
   
       if (likeDislikesExits === COMMENT_LIKE.ALREDY_LIKED) {
-        if (likeOrDislike) {
+        if (likes) {
           await this.commentDatabase.removeLikeDislike(likeOrDislike)
           comments.removeLike()
         } else {
@@ -215,7 +217,7 @@ export class CommentBusiness {
   
         }
       } else if (likeDislikesExits === COMMENT_LIKE.ALREDY_DISLIKED) {
-        if (!likeOrDislike === false) {
+        if (!likes === false) {
           await this.commentDatabase.removeLikeDislike(likeOrDislike)
           comments.removeDisLike()
         } else {
@@ -225,10 +227,10 @@ export class CommentBusiness {
         }
       } else {
         await this.commentDatabase.insertLikeDislike(likeOrDislike)
-        likeOrDislike ? comments.addLike() : comments.addDisLike()
+        likes ? comments.addLike() : comments.addDisLike()
       }
   
-      const updateCommentDB = comments.CommentModel()
+      const updateCommentDB = comments.toDBModel()
       await this.commentDatabase.updateComment(updateCommentDB)
   
       const output: LikeOrDislikeOuputDTO = undefined
@@ -251,17 +253,16 @@ export class CommentBusiness {
   
       const comment = new Comment(
         id,
+        payload.id,
+        0,
+        0,
         content,
-        0,
-        0,
-       new Date().toISOString(),
-       new Date().toISOString(),
-       payload.id,
-        payload.content
+        new Date().toISOString(),
+        new Date().toISOString()  
       )
   
   
-      const CommentsDB = comment.CommentModel()
+      const CommentsDB = comment.toDBModel()
       await this.commentDatabase.insertComment(CommentsDB)
   
       const output : CreateCommentOutputDTO = undefined

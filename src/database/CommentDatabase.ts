@@ -8,7 +8,7 @@ export class CommentDatabase extends BaseDatabase {
     public static TABLE_LIKES_DISLIKES = "likes_dislikes"
 
     public findComment = async (id: string): Promise<CommentDB | undefined> => {
-        const [result] = await CommentDatabase
+        const [result] = await BaseDatabase
             .connection(CommentDatabase.TABLE_COMMENT)
             .select()
             .where({ id })
@@ -56,7 +56,7 @@ export class CommentDatabase extends BaseDatabase {
     ): Promise<void> => {
         await BaseDatabase
             .connection(CommentDatabase.TABLE_COMMENT)
-            .insert(commentDB)
+            .update(commentDB)
             .where({ id: commentDB.id })
     }
 
@@ -111,9 +111,9 @@ export class CommentDatabase extends BaseDatabase {
 
     public getCommentDBWhitCreatorName =
         async (): Promise<CommentDBWhitCreatorName[]> => {
-            const result = await CommentDatabase
+            const result = await BaseDatabase
                 .connection(CommentDatabase.TABLE_COMMENT)
-                .select(`${UserDatabase.TABLE_USERS}`,
+                .select(`${CommentDatabase.TABLE_COMMENT}`,
                     `${CommentDatabase.TABLE_COMMENT}.creator_id`,
                     `${CommentDatabase.TABLE_COMMENT}.content`,
                     `${CommentDatabase.TABLE_COMMENT}.likes`,
@@ -134,9 +134,9 @@ export class CommentDatabase extends BaseDatabase {
 
     public findCommetDBWhitCreatorNameById =
         async (id: string): Promise<CommentDBWhitCreatorName | undefined> => {
-            const [result] = await CommentDatabase
+            const [result] = await BaseDatabase
                 .connection(CommentDatabase.TABLE_COMMENT)
-                .select(`${UserDatabase.TABLE_USERS}`,
+                .select(
                     `${CommentDatabase.TABLE_COMMENT}.id`,
                     `${CommentDatabase.TABLE_COMMENT}.creator_id`,
                     `${CommentDatabase.TABLE_COMMENT}.dislikes`,
@@ -170,7 +170,7 @@ export class CommentDatabase extends BaseDatabase {
     public findDislikeLike = async (
         likeDislikesDB: LikeDislikeDB
     ): Promise<COMMENT_LIKE | undefined> => {
-        const [result]: Array<COMMENT_LIKE | undefined> = await CommentDatabase
+        const [result]: Array<COMMENT_LIKE | undefined> = await BaseDatabase
             .connection(CommentDatabase.TABLE_LIKES_DISLIKES)
             .select()
             .where({
@@ -217,7 +217,7 @@ export class CommentDatabase extends BaseDatabase {
             .update(likesDislikeDB)
             .where({
                 user_id: likesDislikeDB.user_id,
-                comment_id: likesDislikeDB.comment_id
+                comment_id: likesDislikeDB.comment_id 
             })
     }
 

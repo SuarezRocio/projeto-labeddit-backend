@@ -17,8 +17,7 @@ export interface CommentDB {
     created_at: string,
     update_at : string,
     creator: {
-      id: string,
-      name: string
+      id: string
     }
   }
   
@@ -35,15 +34,14 @@ export interface CommentDB {
       likes: number,
       content : string,
       created_at: string,
-      update_at : string,
-      creator_name: string
+      update_at : string
     }
     
 
   
     export interface LikeDislikeDB{
         user_id: string,
-        post_id: string, 
+        comment_id: string, 
         like: number
     }   
   
@@ -56,8 +54,7 @@ export interface CommentDB {
               private likes: number,
               private content: string,
               private createdAt: string,
-              private updateAt: string,
-              private creator_name: string,
+              private updateAt: string
               
               ) {}
       
@@ -119,14 +116,6 @@ export interface CommentDB {
           }
       
           
-          public getCreator_name(): string {
-              return this.creator_name
-          }
-      
-          public setCreator_name(value: string): void {
-              this.creator_name = value
-          }
-      
           public addLike = (): void => {
               this.likes++
           }
@@ -167,9 +156,8 @@ export interface CommentDB {
               created_at: this.createdAt,
               update_at : this.updateAt,
               creator: {
-                  id: this.creator_id,
-                  name: this.creator_name
-              }       
+                  id: this.creator_id
+                }       
               }
       }
   }
