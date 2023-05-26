@@ -10,7 +10,7 @@ import { ForbiddenError } from "../errors/ForbiddenError"
 import { NotFoundError } from "../errors/NotFoundError"
 import { UnathorizedError } from "../errors/UnauthorizedError"
 import { COMMENT_LIKE } from "../models/Comment"
-import { LikeDislikeDB , Comment} from "../models/Comment"
+import { LikeDislikeDB , Comment } from "../models/Comment"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
 
@@ -82,16 +82,16 @@ export class CommentBusiness {
       const CommentDB = await this.commentDatabase.findCommentById(idToEdit)
       console.log(CommentDB)
       if (!CommentDB) {
-        throw new NotFoundError("post com esse id nao existe")
+        throw new NotFoundError("comment com esse id nao existe")
       }
   
       if(payload.id !== CommentDB.creator_id){
-        throw new ForbiddenError("soamente que crio o post pode editarlo")
+        throw new ForbiddenError("soamente que crio o comment pode editarlo")
       }
   
     
        if(payload.id !== CommentDB.creator_id){
-         throw new ForbiddenError("soamente que crio o post pode editarlo")
+         throw new ForbiddenError("soamente que crio o comment pode editarlo")
        }
   
       const comment = new Comment (
@@ -139,7 +139,7 @@ export class CommentBusiness {
       }
   
       if (!commentDadosDB) {
-        throw new NotFoundError("post com esse id nao existe")
+        throw new NotFoundError("comment com esse id nao existe")
       }
   
       await this.commentDatabase.deleteCommentById(idToDelete)
@@ -162,18 +162,18 @@ export class CommentBusiness {
         throw new BadRequestError("Token inválido.")
       }
   
-      const commentDadosDB = await this.commentDatabase.findCommentById(token)
+      const commentDadosDB = await this.commentDatabase.findCommentById(commentId)
   
       if(!payload){
         throw new UnathorizedError()
       }
   
       if (!commentDadosDB) {
-        throw new NotFoundError("post com esse id nao existe")
+        throw new NotFoundError("comment com esse id nao existe")
       }
   
        if(payload.id !== commentDadosDB.creator_id){
-         throw new ForbiddenError("soamente que crio o post pode editarlo")
+         throw new ForbiddenError("soamente que crio o comment pode editarlo")
        }
   
   
@@ -181,7 +181,7 @@ export class CommentBusiness {
         await this.commentDatabase.findCommetDBWhitCreatorNameById(commentId)
   
       if (!commentDBWhitCreatorName) {
-        throw new NotFoundError("post com essa id nao existe")
+        throw new NotFoundError("comment com essa id nao existe")
       }
   
       const comments = new Comment(
@@ -262,8 +262,8 @@ export class CommentBusiness {
       )
   
   
-      const CommentsDB = comment.toDBModel()
-      await this.commentDatabase.insertComment(CommentsDB)
+      const commentsDB = comment.toDBModel()
+      await this.commentDatabase.insertComment(commentsDB)
   
       const output : CreateCommentOutputDTO = undefined
       return output

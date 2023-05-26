@@ -120,7 +120,7 @@ export class CommentController {
   
         const input = LikeOrDislikeCommentSchema.parse({
           commentId: req.params.id,
-          like: req.body.like,
+          likes: req.body.likes,
           token: req.headers.authorization
         })
   

@@ -5,7 +5,7 @@ import { UserDatabase } from "./UserDatabase";
 
 export class CommentDatabase extends BaseDatabase {
     public static TABLE_COMMENT = "comment"
-    public static TABLE_LIKES_DISLIKES = "likes_dislikes"
+    public static TABLE_LIKES_DISLIKES = "likes_dislikes_comment"
 
     public findComment = async (id: string): Promise<CommentDB | undefined> => {
         const [result] = await BaseDatabase
@@ -71,12 +71,12 @@ export class CommentDatabase extends BaseDatabase {
     }
 
 
-    /* public async insertPost(newPostDB: PostDTOS) {
+     public async insertComment(newCommentDB: CommentDB) {
          await BaseDatabase
-             .connection(PostDatabase.TABLE_POST)
-             .insert(newPostDB)
-     }*/
-
+             .connection(CommentDatabase.TABLE_COMMENT)
+             .insert(newCommentDB)
+     }
+/*
     public insertComment = async (
         commentDB: CommentDB
     ): Promise<void> => {
@@ -84,7 +84,7 @@ export class CommentDatabase extends BaseDatabase {
             .connection(CommentDatabase.TABLE_COMMENT)
             .insert(commentDB)
     }
-
+*/
 
     /*   public getPost = async (): Promise <PostDBWhitCreatorName[]> => {
            const postsDB : PostDBWhitCreatorName[] = await PostDatabase
