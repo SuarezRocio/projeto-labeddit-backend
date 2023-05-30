@@ -53,8 +53,8 @@ export interface CommentDB {
               private dislikes: number,
               private likes: number,
               private content: string,
-              private createdAt: string,
-              private updateAt: string
+              private created_at: string,
+              private update_at: string
               
               ) {}
       
@@ -91,19 +91,19 @@ export interface CommentDB {
           }
       
           public getCreatedAt(): string {
-              return this.createdAt
+              return this.created_at
           }
       
           public setCreatedAt(value: string): void {
-              this.createdAt = value
+              this.created_at = value
           }
          
           public getUpdateAt(): string {
-              return this.updateAt
+              return this.update_at
           }
       
           public setUpdatedAt(value: string): void {
-              this.updateAt = value
+              this.update_at = value
           }
       
           
@@ -140,9 +140,9 @@ export interface CommentDB {
               creator_id : this.creator_id, 
               dislikes: this.dislikes,
               likes: this.likes,
-              created_at: this.createdAt,       
+              created_at: this.created_at,       
               content :  this.content,
-              update_at : this.updateAt,
+              update_at : this.update_at,
               }
       }
   
@@ -153,8 +153,8 @@ export interface CommentDB {
               dislikes: this.dislikes,
               likes: this.likes,
               content :  this.content,
-              created_at: this.createdAt,
-              update_at : this.updateAt,
+              created_at: this.created_at,
+              update_at : this.update_at,
               creator: {
                   id: this.creator_id
                 }       

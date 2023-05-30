@@ -71,12 +71,12 @@ export class CommentDatabase extends BaseDatabase {
     }
 
 
-     public async insertComment(newCommentDB: CommentDB) {
+     /*public async insertComment(newCommentDB: CommentDB) {
          await BaseDatabase
              .connection(CommentDatabase.TABLE_COMMENT)
              .insert(newCommentDB)
-     }
-/*
+     }*/
+
     public insertComment = async (
         commentDB: CommentDB
     ): Promise<void> => {
@@ -84,7 +84,7 @@ export class CommentDatabase extends BaseDatabase {
             .connection(CommentDatabase.TABLE_COMMENT)
             .insert(commentDB)
     }
-*/
+
 
     /*   public getPost = async (): Promise <PostDBWhitCreatorName[]> => {
            const postsDB : PostDBWhitCreatorName[] = await PostDatabase
