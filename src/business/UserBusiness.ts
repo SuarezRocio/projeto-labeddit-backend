@@ -20,33 +20,35 @@ export class UserBusiness {
   public getUsers = async (
     input: GetUsersInputDTO
   ): Promise<GetUsersOutputDTO> => {
-    const { q , token } = input
+    const { q, token } = input
 
+
+    //console.log(token)
     const payload = this.tokenManager.getPayload(token)
 
-    if(payload === null) {
+    if (payload === null) {
       throw new BadRequestError("Token inválido.")
     }
 
-    if (payload.role !== USER_ROLES.ADMIN) {
-			throw new BadRequestError("Somente admins podem acessar esse recurso.")
-		}
-
-   /* const hash = await this.hashManager.hash("martin4564")
-    console.log(hash)
-
-    
-    const hash_1 = await this.hashManager.hash("beltrana00")
-    console.log(hash_1)
-
-    
-    const hash_2 = await this.hashManager.hash("astrodev99")
-    console.log(hash_2)*/
+    /*    if (payload.role !== USER_ROLES.ADMIN) {
+          throw new BadRequestError("Somente admins podem acessar esse recurso.")
+        }
+    */
+    /* const hash = await this.hashManager.hash("martin4564")
+     console.log(hash)
+ 
+     
+     const hash_1 = await this.hashManager.hash("beltrana00")
+     console.log(hash_1)
+ 
+     
+     const hash_2 = await this.hashManager.hash("astrodev99")
+     console.log(hash_2)*/
 
 
 
     const usersDB = await this.userDatabase.findUsers(q)
-
+    console.log("userDb", usersDB)
     const users = usersDB.map((userDB) => {
       const user = new User(
         userDB.id,
@@ -56,7 +58,7 @@ export class UserBusiness {
         userDB.role,
         userDB.created_at
       )
-
+      console.log(userDB.id)
       return user.toBusinessModel()
     })
 
@@ -87,10 +89,10 @@ export class UserBusiness {
       name,
       email,
       hashedPassword,
-     // password,
-    //  hashedPassword ,
+      // password,
+      //  hashedPassword ,
       USER_ROLES.NORMAL, // só é possível criar users com contas normais
-     new Date().toISOString()
+      new Date().toISOString()
     )
 
     const newUserDB = newUser.toDBModel()
@@ -129,7 +131,7 @@ export class UserBusiness {
 
     const isPasswordCorrect = await this.hashManager.compare(password, hashedPassword)
 
-    
+
     if (!isPasswordCorrect) {
       throw new BadRequestError("'email' ou 'password' incorretos")
     }

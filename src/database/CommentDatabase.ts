@@ -113,13 +113,13 @@ export class CommentDatabase extends BaseDatabase {
         async (): Promise<CommentDBWhitCreatorName[]> => {
             const result = await BaseDatabase
                 .connection(CommentDatabase.TABLE_COMMENT)
-                .select(`${CommentDatabase.TABLE_COMMENT}`,
+                .select(`${CommentDatabase.TABLE_COMMENT}.id`,
                     `${CommentDatabase.TABLE_COMMENT}.creator_id`,
                     `${CommentDatabase.TABLE_COMMENT}.content`,
                     `${CommentDatabase.TABLE_COMMENT}.likes`,
                     `${CommentDatabase.TABLE_COMMENT}.dislikes`,
                     `${CommentDatabase.TABLE_COMMENT}.update_at`,
-                    `${CommentDatabase.TABLE_COMMENT}.createdAt`,
+                    `${CommentDatabase.TABLE_COMMENT}.created_at`,
                     `${UserDatabase.TABLE_USERS}.name as creator_name`,
                 )
                 .join(

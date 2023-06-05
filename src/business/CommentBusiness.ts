@@ -261,7 +261,7 @@ export class CommentBusiness {
         new Date().toISOString()  
       )
   
-  
+  console.log(comment)
       const commentsDB = comment.toDBModel()
       await this.commentDatabase.insertComment(commentsDB)
   
