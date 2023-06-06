@@ -198,8 +198,6 @@ export class PostBusiness {
 
   }
 
-
-
   public likeOrDislikePost = async (
     input: LikeOrDislikeInputDTO
   ): Promise<LikeOrDislikeOuputDTO> => {
@@ -286,4 +284,3 @@ export class PostBusiness {
     return output
   }
 }
-

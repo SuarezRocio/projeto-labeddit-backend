@@ -13,8 +13,6 @@ export const LikeOrDislikePostSchema = z.object({
     token: z.string().min(1),
     likes: z.boolean()
 }).transform(data => data as LikeOrDislikeInputDTO)
-
-
 /*{
     like: true 
 }*/

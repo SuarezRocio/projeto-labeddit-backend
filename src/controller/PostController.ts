@@ -89,6 +89,7 @@ export class PostController {
     }
   }
 
+
   public deletePost = async (req: Request, res: Response) => {
     try {
 
@@ -114,12 +115,13 @@ export class PostController {
     }
   }
 
+
   public likeOrDislikePost = async (req: Request, res: Response) => {
     try {
 
       const input = LikeOrDislikePostSchema.parse({
-        postId: req.body.id,
-        like: req.body.like,
+        postId: req.params.id,
+        likes: req.body.likes,
         token: req.headers.authorization
       })
 

@@ -1,3 +1,4 @@
+//import { PostDTOS } from "../dtos/post";
 import { LikeDislikeDB, POST_LIKE, PostDB, PostDBWhitCreatorName, PostDTOS } from "../models/Post";
 import { BaseDatabase } from "./BaseDatabase";
 import { UserDatabase } from "./UserDatabase";
