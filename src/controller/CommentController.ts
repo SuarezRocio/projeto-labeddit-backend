@@ -93,8 +93,8 @@ export class CommentController {
     try {
 
       const input = DeleteCommentSchema.parse({
-        idToDelete: req.body.id,
-        //content: req.body.content,
+        idToDelete: req.params.id,
+        content: req.body.content,
         token: req.headers.authorization
       })
 
@@ -119,7 +119,7 @@ export class CommentController {
     try {
 
       const input = LikeOrDislikeCommentSchema.parse({
-        commentId: req.body.id,
+        commentId: req.params.id,
         likes: req.body.likes,
         token: req.headers.authorization
       })
