@@ -46,10 +46,19 @@ export class PostBusiness {
           PostDBWhitCreatorName.likes,
           PostDBWhitCreatorName.content,
           PostDBWhitCreatorName.created_at,
-          PostDBWhitCreatorName.update_at)
+          PostDBWhitCreatorName.update_at
+        )
         return postajesDB.toBusinessModel()
       })
-
+    /**
+                private id: string,
+                private creator_id: string,
+                private dislikes: number,
+                private likes: number,
+                private content: string,
+                private createdAt: string,
+                private updateAt: string,
+                private creator_name: string, */
     const output: GetPostOutputDTO = postajesDB
 
     return output
@@ -117,10 +126,10 @@ export class PostBusiness {
 
 
 
-  public likeOrDislikePost = async (
-    input: LikeOrDislikeInputDTO
-  ): Promise<LikeOrDislikeOuputDTO> => {
-    const { token, postId } = input
+  public deletePost = async (
+    input: DeletePostInputDTO
+  ): Promise<DeletePostOutputDTO> => {
+    const { token, idToDelete } = input
 
     const payload = this.tokenManager.getPayload(token)
 
@@ -128,7 +137,13 @@ export class PostBusiness {
       throw new BadRequestError("Token inválido.")
     }
 
-    const postDadosDB = await this.postDatabase.findPostById(token)
+    /*if(payload.role !== USER_ROLES.ADMIN){
+    if(payload.id !== Post.creator_id){
+      throw new  ForbiddenError("soamente que crio o post pode editarlo")
+    }
+    }*/
+
+    const postDadosDB = await this.postDatabase.findPostById(idToDelete)
 
     if (!payload) {
       throw new UnathorizedError()
@@ -138,68 +153,11 @@ export class PostBusiness {
       throw new NotFoundError("post com esse id nao existe")
     }
 
-    if (payload.id !== postDadosDB.creator_id) {
-      throw new ForbiddenError("soamente que crio o post pode editarlo")
-    }
+    await this.postDatabase.deletePostById(idToDelete)
 
 
-    const postDBWhitCreatorName =
-      await this.postDatabase.findPostDBWhitCreatorNameById(postId)
+    const output: DeletePostOutputDTO = undefined
 
-    if (!postDBWhitCreatorName) {
-      throw new NotFoundError("post com essa id nao existe")
-    }
-
-    const posts = new Post(
-      postDBWhitCreatorName.id,
-      postDBWhitCreatorName.creator_id,
-      postDBWhitCreatorName.dislikes,
-      postDBWhitCreatorName.likes,
-      postDBWhitCreatorName.content,
-      postDBWhitCreatorName.created_at,
-      postDBWhitCreatorName.update_at
-    )
-
-    const likeSQLlite = LikeOrDislikePostSchema ? 1 : 0
-
-
-    const likeOrDislike: LikeDislikeDB = {
-      user_id: payload.id,
-      post_id: postId,
-      likes: likeSQLlite
-    }
-
-    const likeDislikesExits =
-      await this.postDatabase.findDislikeLike(likeOrDislike)
-
-    if (likeDislikesExits === POST_LIKE.ALREDY_LIKED) {
-      if (likeOrDislike) {
-        await this.postDatabase.removeLikeDislike(likeOrDislike)
-        posts.removeLike()
-      } else {
-        await this.postDatabase.updateLikeDislike(likeOrDislike)
-        posts.removeLike()
-        posts.addDisLike()
-
-      }
-    } else if (likeDislikesExits === POST_LIKE.ALREDY_DISLIKED) {
-      if (!likeOrDislike === false) {
-        await this.postDatabase.removeLikeDislike(likeOrDislike)
-        posts.removeDisLike()
-      } else {
-        await this.postDatabase.updateLikeDislike(likeOrDislike)
-        posts.removeDisLike()
-        posts.addLike()
-      }
-    } else {
-      await this.postDatabase.insertLikeDislike(likeOrDislike)
-      likeOrDislike ? posts.addLike() : posts.addDisLike()
-    }
-
-    const updatePostDB = posts.toDBModel()
-    await this.postDatabase.updatePost(updatePostDB)
-
-    const output: LikeOrDislikeOuputDTO = undefined
     return output
   }
 
@@ -228,12 +186,104 @@ export class PostBusiness {
     )
 
 
-    const PostsDB = post.toDBModel()
-    await this.postDatabase.insertPost(PostsDB)
+    const postsDB = post.toDBModel()
+
+    console.log(postsDB)
+    await this.postDatabase.insertPost(postsDB)
+
 
     const output: CreatePostOutputDTO = undefined
     return output
 
 
   }
+
+
+
+  public likeOrDislikePost = async (
+    input: LikeOrDislikeInputDTO
+  ): Promise<LikeOrDislikeOuputDTO> => {
+    const { token, postId, likes } = input
+
+    const payload = this.tokenManager.getPayload(token)
+
+    if (payload === null) {
+      throw new BadRequestError("Token inválido.")
+    }
+
+    const postDadosDB = await this.postDatabase.findPostById(postId)
+
+    if (!payload) {
+      throw new UnathorizedError()
+    }
+
+    if (!postDadosDB) {
+      throw new NotFoundError("post com esse id nao existe")
+    }
+
+    if (payload.id !== postDadosDB.creator_id) {
+      throw new ForbiddenError("soamente que crio o post pode editarlo")
+    }
+
+
+    const postDBWhitCreatorName = await this.postDatabase.findPostDBWhitCreatorNameById(postId)
+
+    if (!postDBWhitCreatorName) {
+      throw new NotFoundError("post com essa id nao existe")
+    }
+
+    const posts = new Post(
+      postDBWhitCreatorName.id,
+      postDBWhitCreatorName.creator_id,
+      postDBWhitCreatorName.dislikes,
+      postDBWhitCreatorName.likes,
+      postDBWhitCreatorName.content,
+      postDBWhitCreatorName.created_at,
+      postDBWhitCreatorName.update_at
+    )
+
+
+    // const likes = true;
+    const likeSQLlite = likes ? 1 : 0;
+
+    const likeOrDislike: LikeDislikeDB = {
+      user_id: payload.id,
+      post_id: postId,
+      likes: likeSQLlite
+    }
+
+    const likeDislikesExits =
+      await this.postDatabase.findDislikeLike(likeOrDislike)
+
+    if (likeDislikesExits === POST_LIKE.ALREDY_LIKED) {
+      if (likes) {
+        await this.postDatabase.removeLikeDislike(likeOrDislike)
+        posts.removeLike()
+      } else {
+        await this.postDatabase.updateLikeDislike(likeOrDislike)
+        posts.removeLike()
+        posts.addDisLike()
+
+      }
+    } else if (likeDislikesExits === POST_LIKE.ALREDY_DISLIKED) {
+      if (!likes === false) {
+        await this.postDatabase.removeLikeDislike(likeOrDislike)
+        posts.removeDisLike()
+      } else {
+        await this.postDatabase.updateLikeDislike(likeOrDislike)
+        posts.removeDisLike()
+        posts.addLike()
+      }
+    } else {
+      await this.postDatabase.insertLikeDislike(likeOrDislike)
+      likes ? posts.addLike() : posts.addDisLike()
+    }
+
+    const updatePostDB = posts.toDBModel()
+    await this.postDatabase.updatePost(updatePostDB)
+
+    const output: LikeOrDislikeOuputDTO = undefined
+    return output
+  }
 }
+

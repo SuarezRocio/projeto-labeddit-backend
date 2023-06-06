@@ -94,6 +94,7 @@ export class PostController {
 
       const input = DeletePostSchema.parse({
         idToDelete: req.params.id,
+        content: req.body.content,
         token: req.headers.authorization
       })
 
@@ -112,7 +113,6 @@ export class PostController {
       }
     }
   }
-
 
   public likeOrDislikePost = async (req: Request, res: Response) => {
     try {
