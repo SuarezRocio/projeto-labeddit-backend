@@ -36,7 +36,7 @@ export class PostDatabase extends BaseDatabase {
     public async findPostById(id: string): Promise<PostDB | undefined> {
         const [result] = await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
-            .select()
+            //.select()
             .where({ id })
 
         return result as PostDB | undefined
@@ -95,10 +95,10 @@ export class PostDatabase extends BaseDatabase {
            return postsDB
        }
      */  /* public async deletePostById(PostToDeleteDB : string) {
-          await BaseDatabase
-          .connection(PostDatabase.TABLE_POST)
-          .insert(PostToDeleteDB)
-      }*/
+      await BaseDatabase
+      .connection(PostDatabase.TABLE_POST)
+      .insert(PostToDeleteDB)
+  }*/
 
     /** 
         creator_id : string, 
@@ -109,6 +109,16 @@ export class PostDatabase extends BaseDatabase {
         update_at : string,
         createdAt: string
         creator_name: string*/
+
+    /*public findPostById = async (id: string): Promise<PostDB | undefined> => {
+        const [postDB]: PostDB[] | undefined = await BaseDatabase.connection(
+            PostDatabase.TABLE_POST
+        ).where({ id });
+
+        return postDB;
+    };*/
+
+
 
     public getPostDBWhitCreatorName =
         async (): Promise<PostDBWhitCreatorName[]> => {
