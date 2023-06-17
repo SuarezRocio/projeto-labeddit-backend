@@ -135,6 +135,7 @@ await BaseDatabase
             const result = await BaseDatabase
                 .connection(CommentDatabase.TABLE_COMMENT)
                 .select(`${CommentDatabase.TABLE_COMMENT}.id`,
+                    `${CommentDatabase.TABLE_COMMENT}.post_id`,
                     `${CommentDatabase.TABLE_COMMENT}.creator_id`,
                     `${CommentDatabase.TABLE_COMMENT}.content`,
                     `${CommentDatabase.TABLE_COMMENT}.likes`,

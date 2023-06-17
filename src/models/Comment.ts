@@ -1,5 +1,6 @@
 export interface CommentDB {
     id: string,
+    postId: string,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -11,6 +12,7 @@ export interface CommentDB {
 // é o modelo de Product que o front receberá (createdAt camelCase)
 export interface CommentModel {
     id: string,
+    postId: string,
     dislikes: number,
     likes: number,
     content: string,
@@ -29,6 +31,7 @@ export enum COMMENT_LIKE {
 
 export interface CommentDBWhitCreatorName {
     id: string,
+    postId: string,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -65,6 +68,7 @@ export interface PostCommentModel {
 export class Comment {
     constructor(
         private id: string,
+        private postId: string,
         private creator_id: string,
         private dislikes: number,
         private likes: number,
@@ -80,6 +84,16 @@ export class Comment {
 
     public setId(value: string): void {
         this.id = value
+    }
+
+
+    public getposttId(): string {
+        return this.postId
+    }
+
+
+    public setposttId(value: string): void {
+        this.postId = value
     }
 
     public getContent(): string {
@@ -153,6 +167,7 @@ export class Comment {
     public toDBModel(): CommentDB {
         return {
             id: this.id,
+            postId: this.postId,
             creator_id: this.creator_id,
             dislikes: this.dislikes,
             likes: this.likes,
@@ -166,6 +181,7 @@ export class Comment {
     public toBusinessModel(): CommentModel {
         return {
             id: this.id,
+            postId: this.postId,
             dislikes: this.dislikes,
             likes: this.likes,
             content: this.content,
