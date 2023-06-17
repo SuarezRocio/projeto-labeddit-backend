@@ -1,4 +1,5 @@
 import { CommentDatabase } from "../database/CommentDatabase"
+import { PostDatabase } from "../database/PostDatabase"
 import { CreateCommentInputDTO, CreateCommentOutputDTO } from "../dtos/comment/createComment"
 import { DeleteCommentInputDTO, DeleteCommentOutputDTO } from "../dtos/comment/deleteComment"
 import { EditCommentInputDTO, EditCommentOutputDTO } from "../dtos/comment/editComment"
@@ -9,10 +10,11 @@ import { BadRequestError } from "../errors/BadRequestError"
 import { ForbiddenError } from "../errors/ForbiddenError"
 import { NotFoundError } from "../errors/NotFoundError"
 import { UnathorizedError } from "../errors/UnauthorizedError"
-import { COMMENT_LIKE } from "../models/Comment"
+import { COMMENT_LIKE, PostCommentDB } from "../models/Comment"
 import { LikeDislikeDB, Comment } from "../models/Comment"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
+import { Post } from "../models/Post"
 
 export class CommentBusiness {
   constructor(
@@ -241,7 +243,7 @@ export class CommentBusiness {
     input: CreateCommentInputDTO
   ): Promise<CreateCommentOutputDTO> => {
     // const { id, name, price } = input
-    const { content, token } = input
+    const { content, token, postId } = input
 
     const payload = this.tokenManager.getPayload(token)
 
@@ -249,9 +251,29 @@ export class CommentBusiness {
       throw new UnathorizedError()
     }
 
+    const postDatabase = new PostDatabase()
+
+    const postIdExists =
+      await
+        postDatabase.findPostById(
+          postId
+        );
+
+    if (!postIdExists) {
+      throw new NotFoundError("Invalid post id");
+    }
+
     const id = this.idGenerator.generate()
 
+    const idExist = await this.commentDatabase.findCommentById(id);
+
+    if (idExist) {
+      throw new NotFoundError();
+    }
+    console.log(payload);
+
     const comment = new Comment(
+      postId,
       id,
       payload.id,
       0,
@@ -265,9 +287,49 @@ export class CommentBusiness {
     const commentsDB = comment.toDBModel()
     await this.commentDatabase.insertComment(commentsDB)
 
-    const output: CreateCommentOutputDTO = undefined
-    return output
+    const output: CreateCommentOutputDTO = {
+      message: "comentario publicado con sucesso"
+    }
 
+
+    /*
+    const output: CreateCommentOutputDTO =  undefined
+    return output
+*/
+
+
+    /*
+        const newPostCommentDB: PostCommentDB = {
+          post_id: postId,
+          comment_id: id,
+        };
+    
+        await this.commentDatabase.insertPostComment(newPostCommentDB);
+    */
+    const updatePostIdExists = new Post(
+      postIdExists.id,
+      postIdExists.creator_id,
+      postIdExists.dislikes,
+      postIdExists.likes,
+      postIdExists.content,
+      postIdExists.created_at,
+      postIdExists.update_at
+
+    );
+
+    updatePostIdExists.setContent(postId + 1)
+    updatePostIdExists.setUpdatedAt(new Date().toISOString())
+
+    const updatePostIdExistsDB = updatePostIdExists.toDBModel()
+    await postDatabase.updatePost(updatePostIdExistsDB)
+
+    /*    updatePostIdExists.updateComment();
+    
+        const updatePostIdExistsDB = updatePostIdExists.toDBModel();
+        await this.postDatabase.
+          updatePostById(updatePostIdExistsDB);
+    */
+    return output
 
   }
 }

@@ -42,6 +42,7 @@ export class CommentController {
       const input = CreateCommentSchema.parse({
         // id: req.body.id,
         content: req.body.content,
+        postId: req.params.id,
         //token: req.body.token
         token: req.headers.authorization
       })
