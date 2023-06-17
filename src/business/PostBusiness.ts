@@ -41,6 +41,7 @@ export class PostBusiness {
       .map((PostDBWhitCreatorName) => {
         const postajesDB = new Post(
           PostDBWhitCreatorName.id,
+          PostDBWhitCreatorName.comments,
           PostDBWhitCreatorName.creator_id,
           PostDBWhitCreatorName.dislikes,
           PostDBWhitCreatorName.likes,
@@ -103,6 +104,7 @@ export class PostBusiness {
 
     const post = new Post(
       PostDB.id,
+      PostDB.comments,
       PostDB.creator_id,
       PostDB.dislikes,
       PostDB.likes,
@@ -177,6 +179,7 @@ export class PostBusiness {
 
     const post = new Post(
       id,
+      0,
       payload.id,
       0,
       0,
@@ -232,6 +235,7 @@ export class PostBusiness {
 
     const posts = new Post(
       postDBWhitCreatorName.id,
+      postDBWhitCreatorName.comments,
       postDBWhitCreatorName.creator_id,
       postDBWhitCreatorName.dislikes,
       postDBWhitCreatorName.likes,
