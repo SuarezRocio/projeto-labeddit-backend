@@ -333,7 +333,7 @@ export class CommentBusiness {
 
     );
 
-    updatePostIdExists.setContent(postIdExists.comments + 1)
+    updatePostIdExists.setComments(postIdExists.comments + 1)
     updatePostIdExists.setUpdatedAt(new Date().toISOString())
 
     const updatePostIdExistsDB = updatePostIdExists.toDBModel()

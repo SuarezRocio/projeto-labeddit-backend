@@ -95,9 +95,9 @@ export class PostDatabase extends BaseDatabase {
            return postsDB
        }
      */  /* public async deletePostById(PostToDeleteDB : string) {
-    await BaseDatabase
-    .connection(PostDatabase.TABLE_POST)
-    .insert(PostToDeleteDB)
+   await BaseDatabase
+   .connection(PostDatabase.TABLE_POST)
+   .insert(PostToDeleteDB)
 }*/
 
     /** 
