@@ -45,6 +45,22 @@ export interface LikeDislikeDB {
     likes: number
 }
 
+export interface PostCommentDB {
+    post_id: string,
+    comment_id: string
+}
+
+
+export interface PostCommentModel {
+    postId: string,
+    creator_id: string,
+    dislikes: number,
+    likes: number,
+    content: string,
+    created_at: string,
+    update_at: string
+}
+
 
 export class Comment {
     constructor(

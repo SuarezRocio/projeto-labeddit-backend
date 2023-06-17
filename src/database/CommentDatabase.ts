@@ -1,11 +1,15 @@
 //import { PostDTOS } from "../dtos/post";
-import { LikeDislikeDB, COMMENT_LIKE, CommentDB, CommentDBWhitCreatorName } from "../models/Comment";
+import { LikeDislikeDB, COMMENT_LIKE, CommentDB, CommentDBWhitCreatorName, PostCommentDB } from "../models/Comment";
+import { PostDB } from "../models/Post"
 import { BaseDatabase } from "./BaseDatabase";
 import { UserDatabase } from "./UserDatabase";
+import { PostDatabase } from "./PostDatabase";
 
 export class CommentDatabase extends BaseDatabase {
     public static TABLE_COMMENT = "comment"
     public static TABLE_LIKES_DISLIKES = "likes_dislikes_comment"
+    public static TABLE_POST = "post"
+
 
     public findComment = async (id: string): Promise<CommentDB | undefined> => {
         const [result] = await BaseDatabase
@@ -36,7 +40,7 @@ export class CommentDatabase extends BaseDatabase {
     public async findCommentById(id: string): Promise<CommentDB | undefined> {
         const [result] = await BaseDatabase
             .connection(CommentDatabase.TABLE_COMMENT)
-            .select()
+            //.select()
             .where({ id })
 
         return result as CommentDB | undefined
@@ -85,6 +89,23 @@ export class CommentDatabase extends BaseDatabase {
             .insert(commentDB)
     }
 
+    public insertPostComment = async (
+        newPostComment: PostCommentDB
+    ): Promise<void> => {
+        await BaseDatabase
+            .connection(CommentDatabase.TABLE_COMMENT)
+            .insert(newPostComment)
+    }
+
+
+
+    public findPostById = async (id: string): Promise<PostDB | undefined> => {
+        const [result] = await BaseDatabase.connection(PostDatabase.TABLE_POST)
+            .select()
+            .where({ id });
+
+        return result as PostDB | undefined;
+    };
 
     /*   public getPost = async (): Promise <PostDBWhitCreatorName[]> => {
            const postsDB : PostDBWhitCreatorName[] = await PostDatabase
@@ -94,10 +115,10 @@ export class CommentDatabase extends BaseDatabase {
            return postsDB
        }
      */  /* public async deletePostById(PostToDeleteDB : string) {
-          await BaseDatabase
-          .connection(PostDatabase.TABLE_POST)
-          .insert(PostToDeleteDB)
-      }*/
+await BaseDatabase
+.connection(PostDatabase.TABLE_POST)
+.insert(PostToDeleteDB)
+}*/
 
     /** 
         creator_id : string, 
