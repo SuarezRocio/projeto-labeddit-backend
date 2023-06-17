@@ -39,6 +39,7 @@ SELECT * FROM users;
 CREATE TABLE
     post (
         id TEXT PRIMARY KEY UNIQUE NOT NULL,
+        comments INTEGER DEFAULT (0) NOT NULL,
         creator_id TEXT NOT NULL,
         dislikes INTEGER DEFAULT (0) NOT NULL,
         likes INTEGER DEFAULT (0) NOT NULL,

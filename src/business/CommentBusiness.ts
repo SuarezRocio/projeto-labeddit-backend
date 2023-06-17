@@ -323,6 +323,7 @@ export class CommentBusiness {
 
     const updatePostIdExists = new Post(
       postIdExists.id,
+      postIdExists.comments,
       postIdExists.creator_id,
       postIdExists.dislikes,
       postIdExists.likes,
@@ -332,7 +333,7 @@ export class CommentBusiness {
 
     );
 
-    updatePostIdExists.setContent(postId + 1)
+    updatePostIdExists.setContent(postIdExists.comments + 1)
     updatePostIdExists.setUpdatedAt(new Date().toISOString())
 
     const updatePostIdExistsDB = updatePostIdExists.toDBModel()

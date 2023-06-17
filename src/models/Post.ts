@@ -1,5 +1,6 @@
 export interface PostDB {
     id: string,
+    comments: number,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -11,6 +12,7 @@ export interface PostDB {
 // é o modelo de Product que o front receberá (createdAt camelCase)
 export interface PostModel {
     id: string,
+    comments: number,
     dislikes: number,
     likes: number,
     content: string,
@@ -29,6 +31,7 @@ export enum POST_LIKE {
 
 export interface PostDBWhitCreatorName {
     id: string,
+    comments: number,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -40,6 +43,7 @@ export interface PostDBWhitCreatorName {
 
 export interface PostDTOS {
     id: string,
+    comments: number,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -60,6 +64,7 @@ export interface LikeDislikeDB {
 export class Post {
     constructor(
         private id: string,
+        private comments: number,
         private creator_id: string,
         private dislikes: number,
         private likes: number,
@@ -75,6 +80,16 @@ export class Post {
     public setId(value: string): void {
         this.id = value
     }
+
+
+    public getComments(): number {
+        return this.comments
+    }
+
+    public setComments(value: number): void {
+        this.comments = value
+    }
+
 
     public getContent(): string {
         return this.content
@@ -146,6 +161,7 @@ export class Post {
     public toDBModel(): PostDB {
         return {
             id: this.id,
+            comments: this.comments,
             creator_id: this.creator_id,
             dislikes: this.dislikes,
             likes: this.likes,
@@ -168,6 +184,7 @@ export class Post {
     public toBusinessModel(): PostModel {
         return {
             id: this.id,
+            comments: this.comments,
             dislikes: this.dislikes,
             likes: this.likes,
             content: this.content,

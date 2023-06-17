@@ -95,10 +95,10 @@ export class PostDatabase extends BaseDatabase {
            return postsDB
        }
      */  /* public async deletePostById(PostToDeleteDB : string) {
-      await BaseDatabase
-      .connection(PostDatabase.TABLE_POST)
-      .insert(PostToDeleteDB)
-  }*/
+    await BaseDatabase
+    .connection(PostDatabase.TABLE_POST)
+    .insert(PostToDeleteDB)
+}*/
 
     /** 
         creator_id : string, 
@@ -125,6 +125,7 @@ export class PostDatabase extends BaseDatabase {
             const result = await BaseDatabase
                 .connection(PostDatabase.TABLE_POST)
                 .select(`${PostDatabase.TABLE_POST}.id`,
+                    `${PostDatabase.TABLE_POST}.comments`,
                     `${PostDatabase.TABLE_POST}.creator_id`,
                     `${PostDatabase.TABLE_POST}.content`,
                     `${PostDatabase.TABLE_POST}.likes`,
@@ -149,6 +150,7 @@ export class PostDatabase extends BaseDatabase {
                 .connection(PostDatabase.TABLE_POST)
                 .select(
                     `${PostDatabase.TABLE_POST}.id`,
+                    `${PostDatabase.TABLE_POST}.comments`,
                     `${PostDatabase.TABLE_POST}.creator_id`,
                     `${PostDatabase.TABLE_POST}.dislikes`,
                     `${PostDatabase.TABLE_POST}.likes`,
