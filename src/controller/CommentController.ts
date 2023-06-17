@@ -16,6 +16,7 @@ export class CommentController {
     try {
       const input = GetCommentSchema.parse({
         //  name: req.body.name,
+        postId: req.params.id,
         token: req.headers.authorization
         // q: req.query.q
       })
@@ -42,6 +43,7 @@ export class CommentController {
       const input = CreateCommentSchema.parse({
         // id: req.body.id,
         content: req.body.content,
+        postId: req.params.id,
         //token: req.body.token
         token: req.headers.authorization
       })

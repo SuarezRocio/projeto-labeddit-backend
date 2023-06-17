@@ -2,7 +2,8 @@ import z from "zod"
 import { CommentModel } from "../../models/Comment"
 
 export interface GetCommentInputDTO {
-  token: string
+  token: string,
+  postId: string
 }
 
 // ProductModel é a estrutura de Product que será devolvida para o Front
@@ -10,5 +11,6 @@ export interface GetCommentInputDTO {
 export type GetCommentOutputDTO = CommentModel[]
 
 export const GetCommentSchema = z.object({
-  token: z.string().min(1).optional()
+  token: z.string().min(1).optional(),
+  postId: z.string().min(1).optional()
 }).transform(data => data as GetCommentInputDTO)
