@@ -130,6 +130,33 @@ await BaseDatabase
         createdAt: string
         creator_name: string*/
 
+
+    /********************************* ******************************************/
+
+    getAllCommentsforpostid = async (
+        id: string
+    ): Promise<CommentDB[]> => {
+        const commentsDB: CommentDB[] = await BaseDatabase.connection(
+            CommentDatabase.TABLE_COMMENT
+        )
+            .select(
+                `${CommentDatabase.TABLE_COMMENT}.*`,
+                `${UserDatabase.TABLE_USERS}.username`
+            )
+            .join(
+                `${UserDatabase.TABLE_USERS}`,
+                `${CommentDatabase.TABLE_COMMENT}.user_id`,
+                "=",
+                `${UserDatabase.TABLE_USERS}.id`
+            )
+            .where({ [`${CommentDatabase.TABLE_COMMENT}.post_id`]: id });
+
+        return commentsDB;
+    };
+
+
+
+    /*************************************************** */
     public getCommentDBWhitCreatorName =
         async (): Promise<CommentDBWhitCreatorName[]> => {
             const result = await BaseDatabase

@@ -95,9 +95,9 @@ export class PostDatabase extends BaseDatabase {
            return postsDB
        }
      */  /* public async deletePostById(PostToDeleteDB : string) {
-   await BaseDatabase
-   .connection(PostDatabase.TABLE_POST)
-   .insert(PostToDeleteDB)
+await BaseDatabase
+.connection(PostDatabase.TABLE_POST)
+.insert(PostToDeleteDB)
 }*/
 
     /** 
@@ -118,7 +118,30 @@ export class PostDatabase extends BaseDatabase {
         return postDB;
     };*/
 
+    /****************************************************************** */
 
+    public findPostByIdWithUsername = async (
+        id: string
+    ): Promise<PostDB | undefined> => {
+        const [result]: PostDB[] | undefined =
+            await BaseDatabase.connection(PostDatabase.TABLE_POST)
+                .select(
+                    `${PostDatabase.TABLE_POST}.*`,
+                    `${UserDatabase.TABLE_USERS}.username`
+                )
+                .join(
+                    `${UserDatabase.TABLE_USERS}`,
+                    `${PostDatabase.TABLE_POST}.user_id`,
+                    "=",
+                    `${UserDatabase.TABLE_USERS}.id`
+                )
+                .where({ [`${PostDatabase.TABLE_POST}.id`]: id });
+
+        return result;
+    };
+
+
+    /************************************************************************** */
 
     public getPostDBWhitCreatorName =
         async (): Promise<PostDBWhitCreatorName[]> => {

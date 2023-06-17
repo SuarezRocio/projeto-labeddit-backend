@@ -13,6 +13,7 @@ import { TokenManager } from "../services/TokenManager"
 import { Post, PostDB } from "../models/Post"
 import { ForbiddenError } from "../errors/ForbiddenError"
 import { USER_ROLES } from "../models/User"
+import { GetPostByIdInputDTO, GetPostByIdOutputDTO } from "../dtos/post/getPostById"
 
 export class PostBusiness {
   constructor(
@@ -287,4 +288,46 @@ export class PostBusiness {
     const output: LikeOrDislikeOuputDTO = undefined
     return output
   }
+
+
+
+  //getPostById
+  public getPostById = async (
+    input: GetPostByIdInputDTO
+  ): Promise<GetPostByIdOutputDTO> => {
+    const { token, postId } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnathorizedError();
+    }
+
+    const postDBWithUsername = await this.postDatabase.findPostByIdWithUsername(
+      postId
+    );
+
+    if (!postDBWithUsername) {
+      throw new NotFoundError("não existe post com o id informado");
+    }
+
+    const post = new Post(
+      postDBWithUsername.id,
+      postDBWithUsername.comments,
+      postDBWithUsername.creator_id,
+      postDBWithUsername.dislikes,
+      postDBWithUsername.likes,
+      postDBWithUsername.content,
+      postDBWithUsername.created_at,
+      postDBWithUsername.update_at
+    );
+
+    const postBusinessModel = post.toBusinessModel();
+    const output: GetPostByIdOutputDTO = { result: postBusinessModel };
+
+    return output;
+  };
+
+
+
 }

@@ -15,6 +15,7 @@ import { LikeDislikeDB, Comment } from "../models/Comment"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
 import { Post } from "../models/Post"
+import { GetCommentsByPostIdInputDTO, GetCommentsByPostIdOutputDTO } from "../dtos/comment/getCommentById"
 
 export class CommentBusiness {
   constructor(
@@ -350,4 +351,49 @@ export class CommentBusiness {
     return output
 
   }
+
+
+  public getCommentsByPostId = async (
+    input: GetCommentsByPostIdInputDTO
+  ): Promise<GetCommentsByPostIdOutputDTO> => {
+    const { token, postId } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnathorizedError();
+    }
+
+    const postDatabase = new PostDatabase();
+    const postDBWithUsername = await postDatabase.findPostByIdWithUsername(
+      postId
+    );
+
+    if (!postDBWithUsername) {
+      throw new NotFoundError("não existe post com o id informado");
+    }
+
+    const commentsDBWithUsername =
+      await this.commentDatabase.getAllCommentsforpostid(postId);
+
+    const comments = commentsDBWithUsername.map((commentWithUsername) => {
+      const comment = new Comment(
+        commentWithUsername.id,
+        commentWithUsername.postId,
+        commentWithUsername.creator_id,
+        commentWithUsername.dislikes,
+        commentWithUsername.likes,
+        commentWithUsername.content,
+        commentWithUsername.created_at,
+        commentWithUsername.update_at
+      );
+
+      return comment.toBusinessModel();
+    });
+
+    const output: GetCommentsByPostIdOutputDTO = { result: comments };
+
+    return output;
+  };
+
 }
