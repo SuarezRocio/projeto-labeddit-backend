@@ -37,17 +37,19 @@ export class PostDatabase extends BaseDatabase {
         const [result] = await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
             .select()
-            .where({ id })
+            .where('id', id)
+        //   .first()
+        // .where({ id: id })
 
         return result as PostDB | undefined
     }
 
 
-    public async updatePostById(id: string, newPost: object) {
+    public async updatePostById(post_id: string, newPost: object) {
         await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
             .update({ post: newPost })
-            .where({ id })
+            .where({ post_id })
     }
 
 
@@ -95,10 +97,10 @@ export class PostDatabase extends BaseDatabase {
            return postsDB
        }
      */  /* public async deletePostById(PostToDeleteDB : string) {
-          await BaseDatabase
-          .connection(PostDatabase.TABLE_POST)
-          .insert(PostToDeleteDB)
-      }*/
+await BaseDatabase
+.connection(PostDatabase.TABLE_POST)
+.insert(PostToDeleteDB)
+}*/
 
     /** 
         creator_id : string, 
@@ -110,11 +112,45 @@ export class PostDatabase extends BaseDatabase {
         createdAt: string
         creator_name: string*/
 
+    /*public findPostById = async (id: string): Promise<PostDB | undefined> => {
+        const [postDB]: PostDB[] | undefined = await BaseDatabase.connection(
+            PostDatabase.TABLE_POST
+        ).where({ id });
+
+        return postDB;
+    };*/
+
+    /****************************************************************** */
+
+    public findPostByIdWithUsername = async (
+        id: string
+    ): Promise<PostDB | undefined> => {
+        const [result]: PostDB[] | undefined =
+            await BaseDatabase.connection(PostDatabase.TABLE_POST)
+                .select(
+                    `${PostDatabase.TABLE_POST}.*`,
+                    `${UserDatabase.TABLE_USERS}.username`
+                )
+                .join(
+                    `${UserDatabase.TABLE_USERS}`,
+                    `${PostDatabase.TABLE_POST}.user_id`,
+                    "=",
+                    `${UserDatabase.TABLE_USERS}.id`
+                )
+                .where({ [`${PostDatabase.TABLE_POST}.id`]: id });
+
+        return result;
+    };
+
+
+    /************************************************************************** */
+
     public getPostDBWhitCreatorName =
         async (): Promise<PostDBWhitCreatorName[]> => {
             const result = await BaseDatabase
                 .connection(PostDatabase.TABLE_POST)
                 .select(`${PostDatabase.TABLE_POST}.id`,
+                    `${PostDatabase.TABLE_POST}.comments`,
                     `${PostDatabase.TABLE_POST}.creator_id`,
                     `${PostDatabase.TABLE_POST}.content`,
                     `${PostDatabase.TABLE_POST}.likes`,
@@ -139,6 +175,7 @@ export class PostDatabase extends BaseDatabase {
                 .connection(PostDatabase.TABLE_POST)
                 .select(
                     `${PostDatabase.TABLE_POST}.id`,
+                    `${PostDatabase.TABLE_POST}.comments`,
                     `${PostDatabase.TABLE_POST}.creator_id`,
                     `${PostDatabase.TABLE_POST}.dislikes`,
                     `${PostDatabase.TABLE_POST}.likes`,

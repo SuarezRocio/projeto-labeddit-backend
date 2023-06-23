@@ -1,4 +1,4 @@
--- Active: 1686168958450@@127.0.0.1@3306
+-- Active: 1687554827919@@127.0.0.1@3306
 
 CREATE TABLE
     users (
@@ -39,6 +39,7 @@ SELECT * FROM users;
 CREATE TABLE
     post (
         id TEXT PRIMARY KEY UNIQUE NOT NULL,
+        comments INTEGER DEFAULT (0) NOT NULL,
         creator_id TEXT NOT NULL,
         dislikes INTEGER DEFAULT (0) NOT NULL,
         likes INTEGER DEFAULT (0) NOT NULL,
@@ -47,20 +48,6 @@ CREATE TABLE
         update_at TEXT DEFAULT (DATETIME()) NOT NULL,
         FOREIGN KEY (creator_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
     );
-
-/*   creator_name TEXT NOT NULL,
- FOREIGN KEY (creator_name) REFERENCES users(name)
- ON UPDATE CASCADE
- ON DELETE CASCADE
- */
-
-/* ON UPDATE CASCADE
- ON DELETE CASCADE
- */
-
-/*  dislikes INTEGER DEFAULT (0) NOT NULL, 
- likes INTEGER DEFAULT (0) NOT NULL, 
- */
 
 INSERT INTO
     post (id, creator_id, content)
@@ -102,18 +89,43 @@ SELECT * FROM likes_dislikes;
 CREATE TABLE
     comment (
         id TEXT PRIMARY KEY UNIQUE NOT NULL,
+        post_id TEXT NOT NULL,
         creator_id TEXT NOT NULL,
         dislikes INTEGER DEFAULT (0) NOT NULL,
         likes INTEGER DEFAULT (0) NOT NULL,
         content TEXT NOT NULL,
         created_at TEXT DEFAULT (DATETIME()) NOT NULL,
         update_at TEXT DEFAULT (DATETIME()) NOT NULL,
-        FOREIGN KEY (creator_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (creator_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+        FOREIGN KEY (post_id) REFERENCES post(id) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
+/*    FOREIGN KEY (post_id) REFERENCES post(id) ON UPDATE CASCADE ON DELETE CASCADE
+ */
+
 INSERT INTO
-    comment (id, creator_id, content)
-VALUES ('c001', 'u001', 'perfeito'), ('c002', 'u002', 'visto :)'), ('c003', 'u003', 'muiito bom');
+    comment (
+        post_id,
+        id,
+        creator_id,
+        content
+    )
+VALUES (
+        'p001',
+        'c001',
+        'u001',
+        'perfeito'
+    ), (
+        'p002',
+        'c002',
+        'u002',
+        'visto :)'
+    ), (
+        'p003',
+        'c003',
+        'u003',
+        'muiito bom'
+    );
 
 DROP TABLE comment;
 
@@ -136,27 +148,7 @@ DROP TABLE likes_dislikes_comment;
 
 SELECT * FROM likes_dislikes_comment;
 
-/*CREATE TABLE post_comment (
- post_id TEXT NOT NULL, 
- comment_id TEXT NOT NULL,
- likes INTEGER NOT NULL,
- FOREIGN KEY (post_id) REFERENCES post(id)
- ON UPDATE CASCADE
- ON DELETE CASCADE,
- FOREIGN KEY (comment_id) REFERENCES comment(id)
- ON UPDATE CASCADE
- ON DELETE CASCADE
- );
- DROP TABLE post_comment;
- SELECT * FROM post_comment;
- INSERT INTO post_comment
- (post_id, comment_id, likes)
- VALUES 
- ('p001', 'c003' , 4),
- ('p002', 'c001' , 3),
- ('p003', 'c002' , 6);*/
-
----------------------------------------------------------
+-------------------------------------------
 
 /*POST*/
 

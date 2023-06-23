@@ -13,6 +13,7 @@ import { TokenManager } from "../services/TokenManager"
 import { Post, PostDB } from "../models/Post"
 import { ForbiddenError } from "../errors/ForbiddenError"
 import { USER_ROLES } from "../models/User"
+import { GetPostByIdInputDTO, GetPostByIdOutputDTO } from "../dtos/post/getPostById"
 
 export class PostBusiness {
   constructor(
@@ -41,6 +42,7 @@ export class PostBusiness {
       .map((PostDBWhitCreatorName) => {
         const postajesDB = new Post(
           PostDBWhitCreatorName.id,
+          PostDBWhitCreatorName.comments,
           PostDBWhitCreatorName.creator_id,
           PostDBWhitCreatorName.dislikes,
           PostDBWhitCreatorName.likes,
@@ -103,6 +105,7 @@ export class PostBusiness {
 
     const post = new Post(
       PostDB.id,
+      PostDB.comments,
       PostDB.creator_id,
       PostDB.dislikes,
       PostDB.likes,
@@ -177,6 +180,7 @@ export class PostBusiness {
 
     const post = new Post(
       id,
+      0,
       payload.id,
       0,
       0,
@@ -201,7 +205,7 @@ export class PostBusiness {
   public likeOrDislikePost = async (
     input: LikeOrDislikeInputDTO
   ): Promise<LikeOrDislikeOuputDTO> => {
-    const { token, postId, likes } = input
+    const { token, post_id, likes } = input
 
     const payload = this.tokenManager.getPayload(token)
 
@@ -209,7 +213,7 @@ export class PostBusiness {
       throw new BadRequestError("Token inválido.")
     }
 
-    const postDadosDB = await this.postDatabase.findPostById(postId)
+    const postDadosDB = await this.postDatabase.findPostById(post_id)
 
     if (!payload) {
       throw new UnathorizedError()
@@ -224,7 +228,7 @@ export class PostBusiness {
     }
 
 
-    const postDBWhitCreatorName = await this.postDatabase.findPostDBWhitCreatorNameById(postId)
+    const postDBWhitCreatorName = await this.postDatabase.findPostDBWhitCreatorNameById(post_id)
 
     if (!postDBWhitCreatorName) {
       throw new NotFoundError("post com essa id nao existe")
@@ -232,6 +236,7 @@ export class PostBusiness {
 
     const posts = new Post(
       postDBWhitCreatorName.id,
+      postDBWhitCreatorName.comments,
       postDBWhitCreatorName.creator_id,
       postDBWhitCreatorName.dislikes,
       postDBWhitCreatorName.likes,
@@ -246,7 +251,7 @@ export class PostBusiness {
 
     const likeOrDislike: LikeDislikeDB = {
       user_id: payload.id,
-      post_id: postId,
+      post_id: post_id,
       likes: likeSQLlite
     }
 
@@ -283,4 +288,46 @@ export class PostBusiness {
     const output: LikeOrDislikeOuputDTO = undefined
     return output
   }
+
+
+
+  //getPostById
+  public getPostById = async (
+    input: GetPostByIdInputDTO
+  ): Promise<GetPostByIdOutputDTO> => {
+    const { token, post_id } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnathorizedError();
+    }
+
+    const postDBWithUsername = await this.postDatabase.findPostByIdWithUsername(
+      post_id
+    );
+
+    if (!postDBWithUsername) {
+      throw new NotFoundError("não existe post com o id informado");
+    }
+
+    const post = new Post(
+      postDBWithUsername.id,
+      postDBWithUsername.comments,
+      postDBWithUsername.creator_id,
+      postDBWithUsername.dislikes,
+      postDBWithUsername.likes,
+      postDBWithUsername.content,
+      postDBWithUsername.created_at,
+      postDBWithUsername.update_at
+    );
+
+    const postBusinessModel = post.toBusinessModel();
+    const output: GetPostByIdOutputDTO = { result: postBusinessModel };
+
+    return output;
+  };
+
+
+
 }
