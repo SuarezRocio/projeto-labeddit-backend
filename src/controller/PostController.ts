@@ -121,7 +121,7 @@ export class PostController {
     try {
 
       const input = LikeOrDislikePostSchema.parse({
-        postId: req.params.id,
+        post_id: req.params.id,
         likes: req.body.likes,
         token: req.headers.authorization
       })
@@ -148,7 +148,7 @@ export class PostController {
     try {
       const input = GetPostByIdSchema.parse({
         token: req.headers.authorization,
-        postId: req.params.id,
+        post_id: req.params.id,
       });
 
       const output = await this.postBusiness.getPostById(input);

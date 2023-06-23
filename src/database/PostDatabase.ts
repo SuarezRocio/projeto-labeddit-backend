@@ -36,18 +36,20 @@ export class PostDatabase extends BaseDatabase {
     public async findPostById(id: string): Promise<PostDB | undefined> {
         const [result] = await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
-            //.select()
-            .where({ id })
+            .select()
+            .where('id', id)
+        //   .first()
+        // .where({ id: id })
 
         return result as PostDB | undefined
     }
 
 
-    public async updatePostById(id: string, newPost: object) {
+    public async updatePostById(post_id: string, newPost: object) {
         await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
             .update({ post: newPost })
-            .where({ id })
+            .where({ post_id })
     }
 
 

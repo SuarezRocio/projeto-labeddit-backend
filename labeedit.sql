@@ -1,4 +1,4 @@
--- Active: 1686423775968@@127.0.0.1@3306
+-- Active: 1687554827919@@127.0.0.1@3306
 
 CREATE TABLE
     users (
@@ -48,20 +48,6 @@ CREATE TABLE
         update_at TEXT DEFAULT (DATETIME()) NOT NULL,
         FOREIGN KEY (creator_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
     );
-
-/*   creator_name TEXT NOT NULL,
- FOREIGN KEY (creator_name) REFERENCES users(name)
- ON UPDATE CASCADE
- ON DELETE CASCADE
- */
-
-/* ON UPDATE CASCADE
- ON DELETE CASCADE
- */
-
-/*  dislikes INTEGER DEFAULT (0) NOT NULL, 
- likes INTEGER DEFAULT (0) NOT NULL, 
- */
 
 INSERT INTO
     post (id, creator_id, content)
@@ -114,6 +100,9 @@ CREATE TABLE
         FOREIGN KEY (post_id) REFERENCES post(id) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
+/*    FOREIGN KEY (post_id) REFERENCES post(id) ON UPDATE CASCADE ON DELETE CASCADE
+ */
+
 INSERT INTO
     comment (
         post_id,
@@ -142,22 +131,6 @@ DROP TABLE comment;
 
 SELECT * FROM comment;
 
-/*
- CREATE TABLE
- post_comment (
- comment_id TEXT NOT NULL,
- post_id TEXT NOT NULL,
- content TEXT NOT NULL,
- FOREIGN KEY (comment_id) REFERENCES comment(id) ON UPDATE CASCADE ON DELETE CASCADE,
- FOREIGN KEY (post_id) REFERENCES post(id) ON UPDATE CASCADE ON DELETE CASCADE
- );
- INSERT INTO
- post_comment (post_id, comment_id, content)
- VALUES ('p001', 'c001', 'perfeito'), ('p002', 'c002', 'visto :)'), ('p003', 'c003', 'muiito bom');
- SELECT * FROM post_comment;
- DROP TABLE post_comment;
- */
-
 CREATE TABLE
     likes_dislikes_comment (
         user_id TEXT NOT NULL,
@@ -175,27 +148,7 @@ DROP TABLE likes_dislikes_comment;
 
 SELECT * FROM likes_dislikes_comment;
 
-/*CREATE TABLE post_comment (
- post_id TEXT NOT NULL, 
- comment_id TEXT NOT NULL,
- likes INTEGER NOT NULL,
- FOREIGN KEY (post_id) REFERENCES post(id)
- ON UPDATE CASCADE
- ON DELETE CASCADE,
- FOREIGN KEY (comment_id) REFERENCES comment(id)
- ON UPDATE CASCADE
- ON DELETE CASCADE
- );
- DROP TABLE post_comment;
- SELECT * FROM post_comment;
- INSERT INTO post_comment
- (post_id, comment_id, likes)
- VALUES 
- ('p001', 'c003' , 4),
- ('p002', 'c001' , 3),
- ('p003', 'c002' , 6);*/
-
----------------------------------------------------------
+-------------------------------------------
 
 /*POST*/
 

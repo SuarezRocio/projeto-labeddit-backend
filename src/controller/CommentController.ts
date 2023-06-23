@@ -17,7 +17,7 @@ export class CommentController {
     try {
       const input = GetCommentSchema.parse({
         //  name: req.body.name,
-        postId: req.params.id,
+        post_id: req.query.id,
         token: req.headers.authorization
         // q: req.query.q
       })
@@ -40,11 +40,11 @@ export class CommentController {
 
   public createComment = async (req: Request, res: Response) => {
     try {
-
+      console.log("hola", req.params)
       const input = CreateCommentSchema.parse({
         // id: req.body.id,
         content: req.body.content,
-        postId: req.params.id,
+        post_id: req.query.id,
         //token: req.body.token
         token: req.headers.authorization
       })
@@ -54,6 +54,7 @@ export class CommentController {
       res.status(201).send(output)
     } catch (error) {
       console.log(error)
+      console.log(req.params)
 
       if (error instanceof ZodError) {
         res.status(400).send(error.issues)
@@ -147,7 +148,7 @@ export class CommentController {
     try {
       const input = GetCommentsByPostIdSchema.parse({
         token: req.headers.authorization,
-        postId: req.params.id,
+        post_id: req.params.id
       });
 
       const output = await this.commentBusiness.getCommentsByPostId(input);

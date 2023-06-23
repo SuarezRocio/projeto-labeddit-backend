@@ -205,7 +205,7 @@ export class PostBusiness {
   public likeOrDislikePost = async (
     input: LikeOrDislikeInputDTO
   ): Promise<LikeOrDislikeOuputDTO> => {
-    const { token, postId, likes } = input
+    const { token, post_id, likes } = input
 
     const payload = this.tokenManager.getPayload(token)
 
@@ -213,7 +213,7 @@ export class PostBusiness {
       throw new BadRequestError("Token inválido.")
     }
 
-    const postDadosDB = await this.postDatabase.findPostById(postId)
+    const postDadosDB = await this.postDatabase.findPostById(post_id)
 
     if (!payload) {
       throw new UnathorizedError()
@@ -228,7 +228,7 @@ export class PostBusiness {
     }
 
 
-    const postDBWhitCreatorName = await this.postDatabase.findPostDBWhitCreatorNameById(postId)
+    const postDBWhitCreatorName = await this.postDatabase.findPostDBWhitCreatorNameById(post_id)
 
     if (!postDBWhitCreatorName) {
       throw new NotFoundError("post com essa id nao existe")
@@ -251,7 +251,7 @@ export class PostBusiness {
 
     const likeOrDislike: LikeDislikeDB = {
       user_id: payload.id,
-      post_id: postId,
+      post_id: post_id,
       likes: likeSQLlite
     }
 
@@ -295,7 +295,7 @@ export class PostBusiness {
   public getPostById = async (
     input: GetPostByIdInputDTO
   ): Promise<GetPostByIdOutputDTO> => {
-    const { token, postId } = input;
+    const { token, post_id } = input;
 
     const payload = this.tokenManager.getPayload(token);
 
@@ -304,7 +304,7 @@ export class PostBusiness {
     }
 
     const postDBWithUsername = await this.postDatabase.findPostByIdWithUsername(
-      postId
+      post_id
     );
 
     if (!postDBWithUsername) {

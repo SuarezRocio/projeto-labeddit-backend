@@ -27,14 +27,15 @@ export class CommentBusiness {
   public getComment = async (
     input: GetCommentInputDTO
   ): Promise<GetCommentOutputDTO> => {
-    const { token, postId } = input
+    const { token, post_id } = input
 
+    // console.log("hol aca esta input", input)
     const payload = this.tokenManager.getPayload(token)
 
     const postDatabase = new PostDatabase()
     const postPlusUser = await
       postDatabase.findPostById(
-        postId
+        post_id
       )
 
     if (!postPlusUser) {
@@ -56,7 +57,7 @@ export class CommentBusiness {
       .map((CommentDBWhitCreatorName) => {
         const commentDB = new Comment(
           CommentDBWhitCreatorName.id,
-          CommentDBWhitCreatorName.postId,
+          CommentDBWhitCreatorName.post_id,
           CommentDBWhitCreatorName.creator_id,
           CommentDBWhitCreatorName.dislikes,
           CommentDBWhitCreatorName.likes,
@@ -112,7 +113,7 @@ export class CommentBusiness {
 
     const comment = new Comment(
       CommentDB.id,
-      CommentDB.postId,
+      CommentDB.post_id,
       CommentDB.creator_id,
       CommentDB.dislikes,
       CommentDB.likes,
@@ -203,7 +204,7 @@ export class CommentBusiness {
 
     const comments = new Comment(
       commentDBWhitCreatorName.id,
-      commentDBWhitCreatorName.postId,
+      commentDBWhitCreatorName.post_id,
       commentDBWhitCreatorName.creator_id,
       commentDBWhitCreatorName.dislikes,
       commentDBWhitCreatorName.likes,
@@ -259,7 +260,7 @@ export class CommentBusiness {
     input: CreateCommentInputDTO
   ): Promise<CreateCommentOutputDTO> => {
     // const { id, name, price } = input
-    const { content, token, postId } = input
+    const { content, token, post_id } = input
 
     const payload = this.tokenManager.getPayload(token)
 
@@ -272,7 +273,7 @@ export class CommentBusiness {
     const postIdExists =
       await
         postDatabase.findPostById(
-          postId
+          post_id
         );
 
     if (!postIdExists) {
@@ -286,11 +287,12 @@ export class CommentBusiness {
     if (idExist) {
       throw new NotFoundError();
     }
+
     console.log(payload);
 
     const comment = new Comment(
       id,
-      postId,
+      post_id,
       payload.id,
       0,
       0,
@@ -314,14 +316,14 @@ export class CommentBusiness {
   */
 
 
-
-    const newPostCommentDB: PostCommentDB = {
-      post_id: postId,
-      comment_id: id,
-    };
-
-    await this.commentDatabase.insertPostComment(newPostCommentDB);
-
+    /*
+        const newPostCommentDB: PostCommentDB = {
+          post_id: post_id,
+          id: id,
+        };
+    
+        await this.commentDatabase.insertPostComment(newPostCommentDB);
+    
     const updatePostIdExists = new Post(
       postIdExists.id,
       postIdExists.comments,
@@ -338,7 +340,7 @@ export class CommentBusiness {
     updatePostIdExists.setUpdatedAt(new Date().toISOString())
 
     const updatePostIdExistsDB = updatePostIdExists.toDBModel()
-    await postDatabase.updatePost(updatePostIdExistsDB)
+    await postDatabase.updatePost(updatePostIdExistsDB)*/
 
     /*    updatePostIdExists.updateComment();
     
@@ -356,7 +358,7 @@ export class CommentBusiness {
   public getCommentsByPostId = async (
     input: GetCommentsByPostIdInputDTO
   ): Promise<GetCommentsByPostIdOutputDTO> => {
-    const { token, postId } = input;
+    const { token, post_id } = input;
 
     const payload = this.tokenManager.getPayload(token);
 
@@ -366,7 +368,7 @@ export class CommentBusiness {
 
     const postDatabase = new PostDatabase();
     const postDBWithUsername = await postDatabase.findPostByIdWithUsername(
-      postId
+      post_id
     );
 
     if (!postDBWithUsername) {
@@ -374,12 +376,12 @@ export class CommentBusiness {
     }
 
     const commentsDBWithUsername =
-      await this.commentDatabase.getAllCommentsforpostid(postId);
+      await this.commentDatabase.getAllCommentsforpostid(post_id);
 
     const comments = commentsDBWithUsername.map((commentWithUsername) => {
       const comment = new Comment(
         commentWithUsername.id,
-        commentWithUsername.postId,
+        commentWithUsername.post_id,
         commentWithUsername.creator_id,
         commentWithUsername.dislikes,
         commentWithUsername.likes,

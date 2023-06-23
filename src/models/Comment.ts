@@ -1,6 +1,6 @@
 export interface CommentDB {
     id: string,
-    postId: string,
+    post_id: string,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -12,7 +12,7 @@ export interface CommentDB {
 // é o modelo de Product que o front receberá (createdAt camelCase)
 export interface CommentModel {
     id: string,
-    postId: string,
+    post_id: string,
     dislikes: number,
     likes: number,
     content: string,
@@ -31,7 +31,7 @@ export enum COMMENT_LIKE {
 
 export interface CommentDBWhitCreatorName {
     id: string,
-    postId: string,
+    post_id: string,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -50,12 +50,12 @@ export interface LikeDislikeDB {
 
 export interface PostCommentDB {
     post_id: string,
-    comment_id: string
+    id: string
 }
 
 
 export interface PostCommentModel {
-    postId: string,
+    post_id: string,
     creator_id: string,
     dislikes: number,
     likes: number,
@@ -68,7 +68,7 @@ export interface PostCommentModel {
 export class Comment {
     constructor(
         private id: string,
-        private postId: string,
+        private post_id: string,
         private creator_id: string,
         private dislikes: number,
         private likes: number,
@@ -88,12 +88,12 @@ export class Comment {
 
 
     public getposttId(): string {
-        return this.postId
+        return this.post_id
     }
 
 
     public setposttId(value: string): void {
-        this.postId = value
+        this.post_id = value
     }
 
     public getContent(): string {
@@ -167,7 +167,7 @@ export class Comment {
     public toDBModel(): CommentDB {
         return {
             id: this.id,
-            postId: this.postId,
+            post_id: this.post_id,
             creator_id: this.creator_id,
             dislikes: this.dislikes,
             likes: this.likes,
@@ -181,7 +181,7 @@ export class Comment {
     public toBusinessModel(): CommentModel {
         return {
             id: this.id,
-            postId: this.postId,
+            post_id: this.post_id,
             dislikes: this.dislikes,
             likes: this.likes,
             content: this.content,
