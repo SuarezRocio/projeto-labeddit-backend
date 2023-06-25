@@ -11,4 +11,4 @@ backend finalizado data: 07/06/2023 continua com o front no repositório: https:
 /********************************************************************/
 
 Este é o repositório do processo de back-end, não o link de entrega, a deploy que foi usada no seguinte repositório:
-
+https://github.com/SuarezRocio/labeedit-fullstack-backend
