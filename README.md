@@ -7,3 +7,8 @@ https://documenter.getpostman.com/view/25860614/2s93m6128n
 Eu fiz o deploy , com uma única alteração, no npm install adicionando o -f por causa do fsevents
 
 backend finalizado data: 07/06/2023 continua com o front no repositório: https://github.com/SuarezRocio/projeto-labeedit-frontend
+
+/********************************************************************/
+
+Este é o repositório do processo de back-end, não o link de entrega, a deploy que foi usada no seguinte repositório:
+
